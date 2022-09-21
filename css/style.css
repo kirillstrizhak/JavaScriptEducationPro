@@ -5,14 +5,16 @@
 
 header {
     display: flex;
+    align-items: center;
     flex-direction: row-reverse;
-    height: 40px;
+    height: 55px;
     padding: 20px 40px;
     background: rgb(129, 129, 255);
 }
 
 .cart-button {
     width: 130px;
+    height: 40px;
     padding: 5px;
     background: rgb(190 255 185);
     border:1px solid rgb(45, 223, 77);
@@ -36,11 +38,16 @@ header {
 }
 
 .goods-item {
+    display: flex;
+    flex-direction: column;
     width: 260px;
     padding: 10px;
     border: 1px solid black;
+    align-items: center;
+    border-radius: 10px;
 }
 
 .goods-item img {
+    border-radius: 10px;
     width: 100%;
 }
