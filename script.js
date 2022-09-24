@@ -1,37 +1,131 @@
-const goods = [
-    { title: 'Shirt', price: 150, img: src = "img/photo-placeholder.jpg" },
-    { title: 'Socks', price: 50, img: src = "img/photo-placeholder.jpg" },
-    { title: 'Jacket', price: 350, img: src = "img/photo-placeholder.jpg" },
-    { title: 'Shoes', price: 250, img: src = "img/photo-placeholder.jpg" },
-];
+class GoodsItem {
+    constructor(title, price, image, id) {
+        this.title = title;
+        this.price = price;
+        this.img = image;
+        this.id = id;
+    }
+    render() {
+        return `<div class="goods-item">
+        <img src="${this.img}"></img>
+        <h3>${this.title}</h3>
+        <p>${this.price} ₽</p>
+        <button class="buy-btn good${this.id}">Купить</button>
+        </div>`;
 
-const renderGoodsItem = (title = 'item', price = 'null', img = 0) => {
-    return `<div class="goods-item">
-    <img src="${img}"></img>
-    <h3>${title}</h3>
-    <p>${price}</p>
-    </div>`;
-};
-
-const renderGoodsList = (list) => {
-    let goodsList = list.map(item => renderGoodsItem(item.title, item.price, item.img));
-    document.querySelector('.goods-list').innerHTML = goodsList;
-
-    // let goodsList = document.querySelector('.goods-list')
-    // for (let i = 0; i < goods.length; i++) {
-    //     goodsList.insertAdjacentHTML('afterbegin', renderGoodsItem(list[i].title, list[i].price, list[i].img));
-
-    // }
+    }
 }
 
-renderGoodsList(goods);
+class GoodsList {
+    constructor() {
+        this.goods = [];
+    }
+    fetchGoods() {
+        this.goods = [
+            { title: 'Shirt', price: 150, img: "img/shirt.jpg", id: 1, quantity: 1 },
+            { title: 'Socks', price: 50, img: "img/socks.webp", id: 2, quantity: 1 },
+            { title: 'Jacket', price: 350, img: "img/jacket.jpg", id: 3, quantity: 1 },
+            { title: 'Shoes', price: 250, img: "img/shoes.webp", id: 4, quantity: 1 },
+        ];
+    }
 
-//ВОПРОС 1
-// Не могу сказать, каким образом функции можно сделать ещё проще или короче :(
+    // countPrice() {
+    //     let price = 0;
+    //     for (let i = 0; i < this.goods.length; i++) {
+    //         price += this.goods[i].quantity * this.goods[i].price;
+    //     };
+    //     console.log(`Суммарная стоимость всех товаров ${price}`)
+    //     return price;
+    // }
 
-//ВОПРОС 2
-// Запятые появляются из-за метода Array.map, тк он перебирает все элементы массива, прогоняя их через метод toString, который разделяет элементы массива запятыми
+    render() {
+        let listHtml = '';
+        this.goods.forEach(good => {
+            const goodItem = new GoodsItem(good.title, good.price, good.img, good.id);
+            listHtml += goodItem.render();
+        })
+        document.querySelector('.goods-list').innerHTML = listHtml;
+        for (let i = 0; i < this.goods.length; i++) {
+            document.querySelector(`.good${i + 1}`).addEventListener('click', (e) => cart.addToCart(this.goods[i]))
+        }
+        //this.countPrice()
+    }
+}
 
-// В функции рендера каталога товаров в комментарии я привёл альтернативный пример, чтобы его генерация была без разделения запятыми
+let list = new GoodsList()
+list.fetchGoods()
+list.render()
 
+class CartItem {
+    constructor(title, price, image, id, quantity) {
+        this.title = title;
+        this.id = id;
+        this.price = price;
+        this.img = image;
+        this.quantity = quantity;
+    }
+    render() {
+        return `<div class="goods-item">
+        <img src="${this.img}"></img>
+        <h3>${this.title}</h3>
+        <p>Price ${this.price} ₽</p>
+        <div class="countBtns">
+            <button class="del-btn${this.id}">Удалить</button>
+            <button class="count-btn${this.id}">+</button>
+            <p>${this.quantity}</p>
+            <button class="count-btn${this.id}">-</button>
+        </div>
+        </div>`;
+    };
+}
 
+class CartList {
+    constructor() {
+        this.goods = [];
+    }
+
+    render() {
+        if (this.goods.length <= 0) {
+            let listHtml = '';
+            listHtml = 'Корзина пуста.'
+            document.querySelector('.goods-list').innerHTML = listHtml;
+        } else {
+            let listHtml = '';
+            this.goods.forEach(good => {
+                const goodItem = new CartItem(good.title, good.price, good.img, good.id, good.quantity);
+                listHtml += goodItem.render();
+            });
+            document.querySelector('.goods-list').innerHTML = listHtml + `<p class="cartPrice">Общая стоимость корзины: ${this.countCartPrice()} ₽</p>`;
+        }
+        document.querySelector('.goods-list').insertAdjacentHTML('beforeend', '<button class="back-btn btn absolute" style="left: 30px; top: 110px;">🠔 Назад</button>')
+        document.querySelector('.back-btn').addEventListener('click', (e) => list.render())
+
+    };
+
+    addToCart(good) { //Метод добавления товара в корзину
+        const existGood = this.goods.find(item => item.id == good.id);
+        if (existGood) {
+            good.quantity++
+            console.log(this.goods);
+        } else {
+            good.quantity = 1;
+            this.goods.push(good);
+            console.log(this.goods);
+        }
+    }
+
+    deleteFromCart(good) {
+        this.goods.pop(good)
+    }
+
+    countCartPrice() {
+        let cartPrice = 0;
+        for (let i = 0; i < this.goods.length; i++) {
+            cartPrice += this.goods[i].quantity * this.goods[i].price;
+        };
+        return cartPrice;
+    }
+}
+
+let cart = new CartList();
+document.querySelector('.cart-button').addEventListener('click', (e) => cart.render());

@@ -3,6 +3,10 @@
     padding: 0;
 }
 
+.absolute {
+    position: absolute;
+}
+
 header {
     display: flex;
     align-items: center;
@@ -34,7 +38,7 @@ header {
     margin-top: 80px;
     padding: 0 20px;
     display: flex;
-    justify-content: space-around;
+    justify-content: center;
 }
 
 .goods-item {
@@ -42,6 +46,7 @@ header {
     flex-direction: column;
     width: 260px;
     padding: 10px;
+    margin: 20px;
     border: 1px solid black;
     align-items: center;
     border-radius: 10px;
@@ -50,4 +55,43 @@ header {
 .goods-item img {
     border-radius: 10px;
     width: 100%;
+    height: 100%;
+}
+
+.back-btn, .buy-btn {
+    width: 80px;
+    height: 40px;
+    border-radius: 10px;
+    border: 1px solid rgb(129, 134, 120);
+    background: rgb(232, 239, 221);
+    transition: 0.1s;
+}
+
+.back-btn:hover, .buy-btn:hover {
+    cursor: pointer;
+    transform: scale(1.05);
+    background: rgb(207, 233, 165);
+}
+
+.cartPrice {
+    position: absolute;
+    top: 190px;
+    left: 30px;
+    font-size: 20px;
+}
+
+.countBtns {
+    display: flex;
+}
+
+.countBtns button {
+    margin: 0 10px;
+}
+
+.countBtns button:hover{
+    cursor: pointer;
+}
+
+.count-btn {
+    width: 15px;
 }
