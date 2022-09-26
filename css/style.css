@@ -75,7 +75,10 @@ header {
 
 .cartPrice {
     position: absolute;
-    top: 190px;
+    top: 160px;
+    padding: 3px;
+    border: 1px solid black;
+    border-radius: 5px;
     left: 30px;
     font-size: 20px;
 }
