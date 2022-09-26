@@ -1,17 +1,35 @@
+const API_URL = 'https://raw.githubusercontent.com/GeekBrainsTutorial/online-store-api/master/responses';
+
+function makeGETRequest(url, callback) {
+    var xhr;
+    if (window.XMLHttpRequest) {
+        xhr = new XMLHttpRequest();
+    } else if (window.ActiveXObject) {
+        xhr = new ActiveXObject("Microsoft.XMLHTTP");
+    }
+
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4) {
+            callback(xhr.responseText);
+        }
+    }
+
+    xhr.open('GET', url, true);
+    xhr.send();
+}
 
 class GoodsItem {
-    constructor(title, price, image) {
-        this.title = title;
+    constructor(product_name, price, id_product) {
+        this.product_name = product_name;
         this.price = price;
-        this.img = image;
+        this.id_product = id_product;
     }
     render() {
         return `<div class="goods-item">
-        <img src="${this.img}"></img>
-        <h3>${this.title}</h3>
+        <h3>${this.product_name}</h3>
         <p>${this.price}</p>
+        <button class="buy-btn good${this.id_product}">Купить</button>
         </div>`;
-        // <button class="buy-btn good${this.id}">Купить</button>
     }
 }
 
@@ -20,12 +38,24 @@ class GoodsList {
         this.goods = [];
     }
     fetchGoods() {
-        this.goods = [
-            { title: 'Shirt', price: 150, img: "img/photo-placeholder.jpg" },
-            { title: 'Socks', price: 50, img: "img/photo-placeholder.jpg" },
-            { title: 'Jacket', price: 350, img: "img/photo-placeholder.jpg" },
-            { title: 'Shoes', price: 250, img: "img/photo-placeholder.jpg" },
-        ];
+        // this.goods = [
+        //     { product_name: 'Shirt', price: 150, img: "img/photo-placeholder.jpg" },
+        //     { product_name: 'Socks', price: 50, img: "img/photo-placeholder.jpg" },
+        //     { product_name: 'Jacket', price: 350, img: "img/photo-placeholder.jpg" },
+        //     { product_name: 'Shoes', price: 250, img: "img/photo-placeholder.jpg" },
+        // ];
+        makeGETRequest(`${API_URL}/catalogData.json`, (goods) => {
+            return new Promise((resolve, reject) => {
+                setTimeout(() => {
+                    if (goods) {
+                        this.goods = JSON.parse(goods);
+                        resolve(this.render());
+                    } else {
+                        reject('error')
+                    }
+                }, 100)
+            })
+        })
     }
 
     countPrice() {
@@ -40,28 +70,30 @@ class GoodsList {
     render() {
         let listHtml = '';
         this.goods.forEach(good => {
-            const goodItem = new GoodsItem(good.title, good.price, good.img);
+            const goodItem = new GoodsItem(good.product_name, good.price, good.id_product);
             listHtml += goodItem.render();
         })
         document.querySelector('.goods-list').innerHTML = listHtml;
+        for (let i = 0; i < this.goods.length; i++) {
+            document.querySelector(`.good${this.goods[i].id_product}`).addEventListener('click', (e) => cart.addToCart(this.goods[i]))
+        }
     }
 }
 
 let list = new GoodsList();
 list.fetchGoods();
-list.render();
 
 class CartItem {
-    constructor(title, price, image) {
-        this.title = title;
+    constructor(product_name, price, quantity) {
+        this.product_name = product_name;
         this.price = price;
-        this.img = image;
+        this.quantity = quantity;
     }
     render() {
         return `<div class="goods-item">
-        <img src="${this.img}"></img>
-        <h3>${this.title}</h3>
-        <p>${this.price}</p>
+        <h3>${this.product_name}</h3>
+        <p>Цена: ${this.price} ₽</p>
+        <p>Кол-во: ${this.quantity} шт.</p>
         </div>`
     }
 }
@@ -71,21 +103,52 @@ class CartList {
         this.goods = []
     };
 
-    addToCart() {
+    render() {
+        if (this.goods.length <= 0) {
+            let listHtml = '';
+            listHtml = 'Корзина пуста.'
+            document.querySelector('.goods-list').innerHTML = listHtml;
+        } else {
+            let listHtml = '';
+            this.goods.forEach(good => {
+                const goodItem = new CartItem(good.product_name, good.price, good.quantity);
+                listHtml += goodItem.render();
+            });
+            document.querySelector('.goods-list').innerHTML = listHtml + `<p class="cartPrice">Общая стоимость корзины: ${this.countCartPrice()} ₽</p>`;
+        }
+        document.querySelector('.goods-list').insertAdjacentHTML('beforeend', '<button class="back-btn btn absolute" style="left: 30px; top: 110px;">🠔 Назад</button>')
+        document.querySelector('.back-btn').addEventListener('click', (e) => list.render())
 
     };
+
+    addToCart(good) {
+        const existGood = this.goods.find(item => item.id_product == good.id_product);
+        if (existGood) {
+            good.quantity++
+        } else {
+            good.quantity = 1;
+            this.goods.push(good);
+        }
+        product.render()
+    }
 
     removeFromCart() {
 
     };
 
-    deleteFromCart() {
+    deleteFromCart(good) {
+        this.goods.pop(good)
+    }
 
-    };
-
-    cpountCartPrice() {
-
-    };
+    countCartPrice() {
+        let cartPrice = 0;
+        for (let i = 0; i < this.goods.length; i++) {
+            cartPrice += this.goods[i].quantity * this.goods[i].price;
+        };
+        return cartPrice;
+    }
 }
 
-//В папке есть еще один неподключенный script.js, в котором я реализовал некий функционал и генерацию корзины
+let product = new CartItem()
+let cart = new CartList();
+document.querySelector('.cart-button').addEventListener('click', (e) => cart.render());
