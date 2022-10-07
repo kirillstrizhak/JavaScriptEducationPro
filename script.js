@@ -1,3 +1,4 @@
+const Headings = ['Новое в корзине!',];
 
 function checkName() {
     let name = document.querySelector('#firstname');
@@ -8,7 +9,7 @@ function checkName() {
         message.style.cssText = `
         position: absolute;
         left: 216px;
-        bottom: 153px;
+        bottom: 185px;
         font-size: 20px;
         color: rgb(11, 166, 27);`;
         name.style.border = '2px solid rgb(11, 166, 27)'
@@ -34,7 +35,7 @@ function checkPhone() {
         message.style.cssText = `
         position: absolute;
         left: 216px;
-        bottom: 105px;
+        bottom: 135px;
         font-size: 20px;
         color: rgb(11, 166, 27);`;
         phone.style.border = '2px solid rgb(11, 166, 27)'
@@ -61,7 +62,7 @@ function checkEmail() {
         message.style.cssText = `
         position: absolute;
         left: 216px;
-        bottom: 56px;
+        bottom: 85px;
         font-size: 20px;
         color: rgb(11, 166, 27);`;
         phone.style.border = '2px solid rgb(11, 166, 27)'
@@ -82,9 +83,6 @@ function checkEmail() {
 document.querySelector('#feedback-sbmt').addEventListener('click', (e) => checkName());
 document.querySelector('#feedback-sbmt').addEventListener('click', (e) => checkPhone());
 document.querySelector('#feedback-sbmt').addEventListener('click', (e) => checkEmail());
-
-
-
 
 const API_URL = 'https://raw.githubusercontent.com/GeekBrainsTutorial/online-store-api/master/responses';
 
@@ -114,8 +112,10 @@ class GoodsItem {
     }
     render() {
         return `<div class="goods-item">
-        <h3>${this.product_name}</h3>
-        <p>${this.price}</p>
+        <div class="goods-item-info">
+            <h3>${this.product_name}</h3>
+            <p>${this.price} ₽</p>
+        </div>
         <button class="buy-btn good${this.id_product}">Купить</button>
         </div>`;
     }
@@ -174,9 +174,10 @@ class CartItem {
     }
     render() {
         return `<div class="goods-item">
-        <h3>${this.product_name}</h3>
-        <p>Цена: ${this.price} ₽</p>
-        <p>Кол-во: ${this.quantity} шт.</p>
+        <div class="goods-item-info">
+            <h3>${this.product_name}</h3>
+            <p>Цена: ${this.price} ₽</p>
+        </div>
         <button class="del-btn good${this.id_product}">Удалить</button>
         </div>`;
     }
@@ -225,6 +226,7 @@ class CartList {
             this.goods.push(good);
         }
         product.render()
+        notification.render(good);
     }
 
     removeFromCart() {
@@ -248,3 +250,25 @@ class CartList {
 let product = new CartItem();
 let cart = new CartList();
 document.querySelector('.cart-button').addEventListener('click', (e) => cart.render());
+
+class Notification {
+    constructor(heading) {
+        this.heading = heading;
+    }
+
+    render(good) {
+        const notifyBlock = document.querySelector('.notifications');
+        notifyBlock.insertAdjacentHTML('afterbegin', `<div class="notification">
+        <div class="addGoodNotification">
+        <h3>${this.heading}</h3>
+        <p>Товар ${good.product_name} добавлен в корзину</p>
+        </div>
+        </div>`);
+        setTimeout(() => document.querySelector('.notification').remove(), 4000);
+    }
+}
+
+const notification = new Notification(Headings[0]);
+
+
+
