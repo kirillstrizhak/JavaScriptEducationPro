@@ -1,0 +1,51 @@
+[
+	{
+		"id_product": 11,
+		"product_name": "Клавиатура",
+		"price": 1450,
+		"quantity": 1,
+		"img": "keyboard.webp"
+	},
+	{
+		"id_product": 12,
+		"product_name": "Монитор",
+		"price": 16300,
+		"quantity": 1,
+		"img": "monitor.webp"
+	},
+	{
+		"id_product": 13,
+		"product_name": "Видеокарта",
+		"price": 22600,
+		"quantity": 1,
+		"img": "gpu.jpg"
+	},
+	{
+		"id_product": 14,
+		"product_name": "Блок питания",
+		"price": 800,
+		"quantity": 1,
+		"img": "block.jpg"
+	},
+	{
+		"id_product": 15,
+		"product_name": "Процессор",
+		"price": 7630,
+		"quantity": 1,
+		"img": "processor.jpg"
+	},
+	{
+		"id_product": 16,
+		"product_name": "Оперативная память 8ГБ",
+		"price": 5420,
+		"quantity": 1,
+		"img": "ram.jpg"
+	},
+	{
+		"id_product": 17,
+		"product_name": "Оперативная память 4ГБ",
+		"price": 2710,
+		"quantity": 1,
+		"img": "ram.jpg"
+	}
+]
