@@ -1,0 +1,18 @@
+{
+  "name": "eshop",
+  "version": "1.0.0",
+  "description": "shop functionality",
+  "main": "index.js",
+  "scripts": {
+    "start": "node js/server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Kirill Strizhak",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5"
+  },
+  "devDependencies": {
+    "express": "^4.18.2"
+  }
+}

@@ -1,10 +1,52 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap');
+
 * {
     margin: 0;
     padding: 0;
 }
 
-html, body {
-    height: 100%;
+@keyframes displayNotification {
+    from {
+        left: -300px;
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+        left: 15px;
+    }
+}
+
+@keyframes hideNotification {
+    from {
+        right: 15px;
+        opacity: 1;
+    }
+    to {
+        right: -300px;
+        opacity: 0;
+    }
+}
+
+@keyframes notificationProgressBar {
+    from {
+        width: 100%;
+    }
+    to {
+        width: 0;
+    }
+}
+
+@keyframes displayOpatcity {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+html, body, .vue-container {
+    font-family: 'Roboto', sans-serif;
 }
 
 .absolute {
@@ -22,58 +64,167 @@ main {
 }
 
 header {
+    position: sticky;
+    top: 0;
     display: flex;
+    color: #fff;
+    justify-content: space-between;
     align-items: center;
-    flex-direction: row-reverse;
     height: 30px;
     padding: 20px 40px;
     background: #000000;
 }
 
+.title {
+    font-size: 30px;
+    font-weight: bold;
+}
+
 .cart-button {
-    width: 130px;
-    height: 40px;
-    padding: 5px;
-    background: rgb(190 255 185);
-    border:1px solid rgb(45, 223, 77);
-    border-radius: 10px;
-    font-size: 16px;
-    font-weight: 700;
-    transition: 0.1s;
+    display: flex;
+    position: absolute;
+    right: 20px;
+    min-width: 155px;
+    height: 51px;
+    color: #fff;
+    border: 1px solid #fff;
+    padding: 10px;
+    box-shadow: #ffffff 0px 3px 13px;
+    transition: 0.2s;
+}
+
+.cart-icon {
+    fill: #fff;
+    width: 40px;
+    margin-right: 15px;
+    transition: 0.2s;
+}
+
+.cart-button-info {
+    font-size: 14px;
+    align-items: center;
+    display: flex;
+    text-align: center;
+}
+
+.cart-button:hover .cart-icon {
+    fill: rgb(208, 208, 208);
 }
 
 .cart-button:hover {
     cursor: pointer;
-    background: rgb(164 255 120);
-    transform: scale(1.03);
+    color: rgb(208, 208, 208);
+    /* box-shadow: #cccccc 0px 3px 13px; */
+}
+
+.cart-widget {
+    display: flex;
+    min-width: 230px;
+    min-height: 80px;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    color: #000000;
+    top: 64px;
+    right: 10px;
+    background: #fff;
+    padding: 10px;
+    z-index: 1;
+    box-shadow: #ababab 5px 5px 12px;
+    animation-name: displayOpatcity;
+    animation-duration: 0.2s;
+    animation-fill-mode: forwards;
+}
+
+.cart-widget-item {
+    width: 230px;
+    height: 80px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    text-align: center;
+    border-bottom: 1px solid #fff;
+    background: #e9e9e9;
+}
+
+.cart-widget-item-info {
+    padding: 15px;
+}
+
+.search-line {
+    background: #fff;
+    display: flex;
+    box-shadow: inset 0px 0px 7px 1px #838383;
+    align-items: center;
+    border-radius: 10px;
+    padding: 0 10px;
+}
+
+.search-line svg:hover {
+    cursor: pointer;
+    fill: #696969;
+}
+
+.search-good {
+    width: 300px;
+    font-size: 16px;
+    background: transparent;
+    outline: none;
+    border: none;
+    padding: 10px;
+}
+
+.clear-search {
+    color: #000000;
+    margin-right: 5px;
+    transition: 0.2s;
+}
+
+.clear-search:hover{
+    cursor: pointer;
+    color: #838383;
+    transform: scale(0.99);
+}
+
+.goods-list-container {
+    min-height: 500px;
 }
 
 .goods-list {
     margin-top: 80px;
     padding: 0 20px;
     display: flex;
+    flex-wrap: wrap;
     justify-content: center;
 }
 
 .goods-item {
     display: flex;
     flex-direction: column;
-    width: 260px;
-    padding: 10px;
+    justify-content: space-between;
+    width: 290px;
+    height: 300px;
     margin: 20px;
+    font-size: 20px;
     align-items: center;
+    text-align: center;
     border-radius: 2px;
     box-shadow: #ababab 5px 5px 12px;
-    background: #e9e9e9;
+    background: #ffffff;
+}
+
+.goods-item-info {
+    padding: 10px;
 }
 
 .goods-item img {
     border-radius: 10px;
-    width: 100%;
-    height: 100%;
+    width: 160px;
+    height: 125px;
+    object-fit: contain;
 }
 
-.back-btn, .buy-btn, .del-btn {
+.back-btn {
     width: 80px;
     height: 40px;
     border-radius: 10px;
@@ -82,10 +233,42 @@ header {
     transition: 0.1s;
 }
 
-.back-btn:hover, .buy-btn:hover, .del-btn:hover {
+.back-btn:hover {
     cursor: pointer;
     transform: scale(1.05);
     background: rgb(207, 233, 165);
+}
+
+.del-btn {
+    height: 100%;
+    padding: 10px;
+    border: none;
+    border-left: 1px solid #fff;
+    background: rgb(178, 28, 28);
+    color: #fff;
+    transition: 0.2s;
+}
+
+.del-btn:hover {
+    cursor: pointer;
+    background: #cecece;
+    color: rgb(178, 28, 28);
+}
+
+.buy-btn {
+    width: 100%;
+    height: 40px;
+    font-size: 20px;
+    border: 1px solid black;
+    background: black;
+    color: white;
+    transition: 0.2s;
+}
+
+.buy-btn:hover {
+    cursor: pointer;
+    background: #fff;
+    color: #000000;
 }
 
 .cartPrice {
@@ -107,6 +290,61 @@ header {
     left: 30px;
 }
 
+.notifications {
+    flex: 0 0 auto;
+    width: 230px;
+    position: fixed;
+    height: 50vh;
+    padding: 0 15px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    top: 80px;
+    z-index: 1;
+}
+
+.notifications::-webkit-scrollbar {
+    width: 5px;
+}
+
+.notifications::-webkit-scrollbar-thumb {
+    background: #c8c8c8;
+    border-radius: 10px;
+    height: 20px;
+}
+
+.notification {
+    width: 220px;
+    height: 58px;
+    margin-top: 30px;
+}
+
+.addGoodNotification {
+    position: absolute;
+    width: 200px;
+    margin: 5px 0;
+    border: 1px solid rgb(11, 166, 27);
+    background: rgb(232, 239, 221);
+    box-shadow: #ababab 5px 5px 12px;
+    color: rgb(11, 166, 27);  
+    animation-name: displayNotification;
+    animation-duration: 0.4s;
+    animation-fill-mode: forwards;
+}
+
+.addGoodNotificationInfo {
+    padding: 10px;
+
+}
+
+.notification-progress-bar {
+    width: 100%;
+    height: 3px;
+    background: rgb(11, 166, 27);
+    animation-name: notificationProgressBar;
+    animation-duration: 3s;
+    animation-fill-mode: both;
+}
+
 .countBtns {
     display: flex;
 }
@@ -126,9 +364,10 @@ header {
 footer {
     flex: 0 0 auto;
     display: flex;
+    align-items: center;
     justify-content: space-between;
     margin-top: 20px;
-    padding: 50px;
+    padding: 25px;
     background: #000000;
 }
 
@@ -139,15 +378,37 @@ footer {
     position: relative;
 }
 
-.feedback input, button {
+.feedback-forms {
+    padding-bottom: 50px;
+}
+
+.feedback input {
     outline: none;
-    width: 200px;
+    width: 228px;
     margin: 10px 0;
-    padding: 5px;
+    padding: 10px;
+    border: 2px solid #000000;
+    border-radius: 5px;
+    box-shadow: inset 0px 0px 7px 1px #838383;
+}
+
+.feedback button {
+    margin-top: 5px;
+    width: 250px;
+    height: 40px;
+    font-size: 20px;
+    border: 1px solid #fff;
+    border-radius: 3px;
+    background: black;
+    color: #fff;
+    transition: 0.2s;
 }
 
 .feedback button:hover {
     cursor: pointer;
+    color: #000000;
+    background: #fff;
+    border: 1px solid #fff;
 }
 
 .feedback p {
@@ -156,7 +417,7 @@ footer {
 }
 
 .warn-msg {
-    padding: 5px;
+    font-size: 14px;
     border-radius: 3px;
     display: none;
 }
